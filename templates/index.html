@@ -1,0 +1,72 @@
+﻿<head>
+<link href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
+<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+<script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+
+<script type="text/javascript">
+$(function() {
+    $("#autocomplete").autocomplete({
+        source:function(request, response) {
+            $.getJSON("{{url_for('autocomplete')}}",{
+                q: request.term, // in flask, "q" will be the argument to look for using request.args
+            }, function(data) {
+                response(data.matching_results); // matching_results from jsonify
+            });
+        },
+        minLength: 3,
+
+        select: function(event, ui) {
+	$("#process").val(ui.item.value);
+
+            console.log(ui.item.value); // not in your question, but might help later
+        }
+    });
+})
+
+</script>
+</head>
+<body>
+<form class="form-inline" action="/process">
+ <div class="form-group">
+    <input name="autocomplete" type="text" id="autocomplete" class="form-control input-lg"/>
+    <button type="submit" class="btn btn-info">Найти</button>
+      {{ form }}
+      {{ table }}
+
+   </div>
+</form>
+
+
+<style>
+.form-control {
+    display: block;
+    width:500px;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.btn {padding: .375rem .75rem; margin-top:10px;}
+
+.cell-highlight {
+  background-color: gold;
+  font-weight: bold;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: Gainsboro;
+}
+
+tbody tr:nth-child(even) {
+  background-color: AntiqueWhite;
+}
+th, td {
+	padding: 8px;
+}
+</style>
+</body>
